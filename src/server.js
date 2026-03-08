@@ -13,15 +13,20 @@ dotenv.config();
 const app = express();
 await connectDB();
 
+const allowedOrigins = [
+	"http://localhost:3000",
+	"https://code-snippet-demo.vercel.app",
+];
+
 app.use(
 	cors({
-		origin:
-			process.env.NODE_ENV === "development"
-				? "http://localhost:3000"
-				: process.env.FRONTEND_URL,
+		origin: allowedOrigins,
+		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
 	}),
 );
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
