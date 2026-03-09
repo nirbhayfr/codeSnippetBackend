@@ -76,19 +76,11 @@ const userSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-userSchema.pre("save", async function (next) {
-	if (!this.isModified("password")) {
-		next();
-		return;
-	}
+userSchema.pre("save", async function () {
+	if (!this.isModified("password")) return;
 
-	try {
-		const salt = await bcryptjs.genSalt(10);
-		this.password = await bcryptjs.hash(this.password, salt);
-		// next();
-	} catch (error) {
-		throw error;
-	}
+	const salt = await bcryptjs.genSalt(10);
+	this.password = await bcryptjs.hash(this.password, salt);
 });
 
 // Method to compare passwords
